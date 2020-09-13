@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/fragment_gallery_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/fragment_gallery_layout_album"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            android:layout_gravity="center_horizontal"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+            android:visibility="gone">
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/fragment_gallery_actv_album"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:inputType="none"
+                android:gravity="center"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragment_gallery_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

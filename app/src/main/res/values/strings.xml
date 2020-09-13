@@ -1,0 +1,4 @@
+<resources>
+    <string name="gallery_submit_default">등록</string>
+    <string name="gallery_submit">등록(%1$d)</string>
+</resources>
