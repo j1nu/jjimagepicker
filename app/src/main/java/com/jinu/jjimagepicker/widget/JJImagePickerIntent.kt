@@ -12,8 +12,4 @@ class JJImagePickerIntent(context: Context) : Intent(context, JJImagePickerActiv
     fun setMaxSelectable(maxSelectable: Int) {
         this.putExtra(JJImagePickerActivity.MAX_SELECTABLE, maxSelectable)
     }
-
-    fun setSpanCount(spanCount: Int) {
-        this.putExtra(JJImagePickerActivity.SPAN_COUNT, spanCount)
-    }
 }

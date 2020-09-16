@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
     private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
-            println(result.data)
+            println(result.data!!.getStringArrayListExtra("selectedUris"))
         }
     }
 
@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity() {
             val intent = JJImagePickerIntent(this)
             intent.setCountable(true)
             intent.setMaxSelectable(9)
-            intent.setSpanCount(3)
 
             startForResult.launch(intent)
         }
