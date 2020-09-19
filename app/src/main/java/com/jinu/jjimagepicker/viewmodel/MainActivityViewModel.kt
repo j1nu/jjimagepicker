@@ -1,58 +1,90 @@
-/*
- * Copyright (C) 2019 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.jinu.jjimagepicker.viewmodel
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.app.RecoverableSecurityException
-import android.content.ContentProvider
 import android.content.ContentResolver
 import android.content.ContentUris
-import android.content.IntentSender
 import android.database.ContentObserver
-import android.database.Cursor
 import android.net.Uri
-import android.os.Build
 import android.os.Handler
 import android.provider.MediaStore
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.jinu.jjimagepicker.JJImagePickerActivity
 import com.jinu.jjimagepicker.model.Album
 import com.jinu.jjimagepicker.model.MediaStoreImage
+import com.jinu.jjimagepicker.widget.CheckView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
 
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
+    var countable: Boolean = false
+    var maxSelectable: Int = 0
+
     private val _albums = MutableLiveData<ArrayList<Album>>()
     val albums: LiveData<ArrayList<Album>> = _albums
 
+    private val _selectedImages = MutableLiveData<ArrayList<MediaStoreImage>>(arrayListOf())
+    val selectedImages: LiveData<ArrayList<MediaStoreImage>> = _selectedImages
+
+    var selectedAlbumIndex: Int = 0
+
     private var contentObserver: ContentObserver? = null
+
+    fun setExtraSettings(countable: Boolean, maxSelectable: Int) {
+        this.countable = countable
+        this.maxSelectable = maxSelectable
+    }
+
+    private fun notifySelectedImagesChanged() {
+        _selectedImages.value = _selectedImages.value!!
+    }
+
+    fun select(image: MediaStoreImage) {
+        _selectedImages.value!!.add(image)
+        notifySelectedImagesChanged()
+    }
+
+    fun deselect(image: MediaStoreImage): Int {
+        val index = _selectedImages.value!!.indexOf(image)
+        if (index == -1)
+            return -1
+
+        _selectedImages.value!!.removeAt(index)
+        notifySelectedImagesChanged()
+
+        return index
+    }
+
+    fun isSelected(image: MediaStoreImage): Boolean {
+        return _selectedImages.value!!.contains(image)
+    }
+
+    fun isSelectable(): Boolean {
+        return _selectedImages.value!!.size < maxSelectable
+    }
+
+    fun getSelectedCount(): Int {
+        return _selectedImages.value!!.size
+    }
+
+    fun selectedNumOf(image: MediaStoreImage): Int {
+        val index = _selectedImages.value!!.indexOf(image)
+        return if (index == -1) CheckView.UNCHECKED else index + 1
+    }
+
+    fun getAlbum(index: Int): Album {
+        return _albums.value!![index]
+    }
 
     fun loadImages() {
         viewModelScope.launch {
-            println("load images")
             val albums = queryImages()
             _albums.postValue(albums)
 
@@ -60,47 +92,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 contentObserver = getApplication<Application>().contentResolver.registerObserver(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                 ) {
-                    println("observe")
                     loadImages()
                 }
-            }
-        }
-    }
-
-    fun queryAlbums() {
-        val projection = arrayOf(
-            MediaStore.Images.Media._ID,
-            MediaStore.Images.Media.BUCKET_ID,
-            MediaStore.Images.Media.BUCKET_DISPLAY_NAME
-        )
-
-        getApplication<Application>().contentResolver.query(
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            projection,
-            null,
-            null,
-            null
-        )?.use { cursor ->
-            val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-            val bucketIdColumn =
-                cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_ID)
-            val bucketDisplayNameColumn =
-                cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
-
-            while (cursor.moveToNext()) {
-                val id = cursor.getLong(idColumn)
-                val bucketId = cursor.getLong(bucketIdColumn)
-                val bucketDisplayName = cursor.getString(bucketDisplayNameColumn)
-
-                val contentUri = ContentUris.withAppendedId(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    id
-                )
-
-                println("id = $id")
-                println("bucketId = $bucketId")
-                println("bucketDisplayName = $bucketDisplayName")
-                println("contentUri = $contentUri")
             }
         }
     }
@@ -119,19 +112,19 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 MediaStore.Images.Media.BUCKET_DISPLAY_NAME
             )
 
-            val selection = "${MediaStore.Images.Media.DATE_ADDED} >= ?"
-
-            val selectionArgs = arrayOf(
-                dateToTimestamp(day = 22, month = 10, year = 2008).toString()
-            )
+//            val selection = "${MediaStore.Images.Media.DATE_ADDED} >= ?"
+//
+//            val selectionArgs = arrayOf(
+//                dateToTimestamp(day = 22, month = 10, year = 2008).toString()
+//            )
 
             val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
 
             getApplication<Application>().contentResolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 projection,
-                selection,
-                selectionArgs,
+                null,
+                null,
                 sortOrder
             )?.use { cursor ->
                 val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
@@ -164,8 +157,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                     if (albumIndex == -1) {
                         albumIds.add(bucketId)
                         albums.add(Album(bucketId, bucketDisplayName, arrayListOf(image)))
-                    }
-                    else
+                    } else
                         albums[albumIndex].images.add(image)
                 }
             }

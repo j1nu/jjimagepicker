@@ -6,5 +6,19 @@
     <fragment
         android:id="@+id/galleryFragment"
         android:name="com.jinu.jjimagepicker.GalleryFragment"
-        android:label="GalleryFragment" />
+        android:label="GalleryFragment" >
+        <action
+            android:id="@+id/action_to_previewFragment"
+            app:destination="@id/previewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/previewFragment"
+        android:name="com.jinu.jjimagepicker.PreviewFragment"
+        android:label="PreviewFragment" >
+        <argument
+            android:name="albumIndex"
+            app:argType="integer" />
+        <argument android:name="imagePosition"
+            app:argType="integer" />
+    </fragment>
 </navigation>

@@ -13,7 +13,7 @@ import com.jinu.jjimagepicker.R
 import com.jinu.jjimagepicker.model.Album
 import kotlinx.android.synthetic.main.item_album_dropdown.view.*
 
-class AlbumDropdownAdapter(context: Context, private val albums: ArrayList<Album>, private val onClick: (Album) -> Unit) : ArrayAdapter<Album>(context, R.layout.item_album_dropdown) {
+class AlbumDropdownAdapter(context: Context, private val albums: ArrayList<Album>, private val onClick: (Int, Album) -> Unit) : ArrayAdapter<Album>(context, R.layout.item_album_dropdown) {
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getCount(): Int {
@@ -32,7 +32,7 @@ class AlbumDropdownAdapter(context: Context, private val albums: ArrayList<Album
         val view = p1 ?: inflater.inflate(R.layout.item_album_dropdown, parent, false)
 
         view.setOnClickListener {
-            onClick(albums[p0])
+            onClick(p0, albums[p0])
         }
 
         Glide.with(view.album_cover)

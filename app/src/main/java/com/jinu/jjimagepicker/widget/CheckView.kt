@@ -215,7 +215,6 @@ open class CheckView : View {
     }
 
     companion object {
-
         const val UNCHECKED = Integer.MIN_VALUE
         const val SIZE = 48 // dp
         const val STROKE_RADIUS = 11.5f // dp

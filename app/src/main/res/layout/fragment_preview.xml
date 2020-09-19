@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/fragment_preview_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp">
+
+        <TextView
+            android:id="@+id/fragment_preview_toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:textSize="18sp"
+            android:layout_gravity="center_horizontal" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+<!--    <com.jinu.jjimagepicker.widget.CheckView-->
+<!--        android:id="@+id/fragment_preview_check"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@+id/fragment_preview_toolbar"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_alignParentRight="true"-->
+<!--        android:layout_margin="15dp"/>-->
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/fragment_preview_pager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
