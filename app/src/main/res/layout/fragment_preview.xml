@@ -21,18 +21,18 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <com.jinu.jjimagepicker.widget.CheckView
-        android:id="@+id/fragment_preview_check"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/fragment_preview_toolbar"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="15dp"/>
+<!--    <com.jinu.jjimagepicker.widget.CheckView-->
+<!--        android:id="@+id/fragment_preview_check"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@+id/fragment_preview_toolbar"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_alignParentRight="true"-->
+<!--        android:layout_margin="15dp"/>-->
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/fragment_preview_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

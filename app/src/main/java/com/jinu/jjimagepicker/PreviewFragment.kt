@@ -17,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -86,9 +87,9 @@ class PreviewFragment : Fragment() {
     }
 
     private fun initSelectedImagesObserver(view: View) {
-        viewModel.selectedImages.observe(viewLifecycleOwner, { selectedImages ->
+        viewModel.selectedImages.observe(viewLifecycleOwner) { selectedImages ->
             updateToolbar(view, selectedImages.size)
-        })
+        }
     }
 
     private fun updateToolbar(view: View, selectedCount: Int) {

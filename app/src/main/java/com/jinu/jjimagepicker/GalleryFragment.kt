@@ -17,6 +17,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -97,8 +99,8 @@ class GalleryFragment : Fragment() {
 
     private fun initGalleryAdapter(view: View) {
         galleryAdapter = GalleryAdapter(viewModel) { position, image ->
-            val action = GalleryFragmentDirections.actionToPreviewFragment(viewModel.selectedAlbumIndex, position)
-            findNavController().navigate(action)
+//            val action = GalleryFragmentDirections.actionToPreviewFragment(viewModel.selectedAlbumIndex, position)
+//            findNavController().navigate(action)
         }
 
         view.fragment_gallery_recyclerview.also {
@@ -109,7 +111,7 @@ class GalleryFragment : Fragment() {
     }
 
     private fun initAlbumsObserver(view: View) {
-        viewModel.albums.observe(viewLifecycleOwner, { albums ->
+        viewModel.albums.observe(viewLifecycleOwner, Observer { albums ->
             initAlbumDropdownAdapter(view, albums)
 
             if (albums.isNotEmpty())
@@ -142,7 +144,7 @@ class GalleryFragment : Fragment() {
     }
 
     private fun initSelectedImagesObserver(view: View) {
-        viewModel.selectedImages.observe(viewLifecycleOwner, { selectedImages ->
+        viewModel.selectedImages.observe(viewLifecycleOwner, Observer { selectedImages ->
             updateToolbar(view, selectedImages.size)
         })
     }

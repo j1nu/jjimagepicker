@@ -85,7 +85,6 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
     fun loadImages() {
         viewModelScope.launch {
-            println("load images")
             val albums = queryImages()
             _albums.postValue(albums)
 
@@ -93,7 +92,6 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 contentObserver = getApplication<Application>().contentResolver.registerObserver(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                 ) {
-                    println("observe")
                     loadImages()
                 }
             }
@@ -114,19 +112,19 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 MediaStore.Images.Media.BUCKET_DISPLAY_NAME
             )
 
-            val selection = "${MediaStore.Images.Media.DATE_ADDED} >= ?"
-
-            val selectionArgs = arrayOf(
-                dateToTimestamp(day = 22, month = 10, year = 2008).toString()
-            )
+//            val selection = "${MediaStore.Images.Media.DATE_ADDED} >= ?"
+//
+//            val selectionArgs = arrayOf(
+//                dateToTimestamp(day = 22, month = 10, year = 2008).toString()
+//            )
 
             val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
 
             getApplication<Application>().contentResolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 projection,
-                selection,
-                selectionArgs,
+                null,
+                null,
                 sortOrder
             )?.use { cursor ->
                 val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
@@ -159,8 +157,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                     if (albumIndex == -1) {
                         albumIds.add(bucketId)
                         albums.add(Album(bucketId, bucketDisplayName, arrayListOf(image)))
-                    }
-                    else
+                    } else
                         albums[albumIndex].images.add(image)
                 }
             }
